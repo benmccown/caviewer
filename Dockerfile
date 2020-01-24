@@ -7,7 +7,11 @@ RUN go get -d -v ./...
 
 RUN go build -o /go/bin/app
 
+RUN adduser -D appuser
+
 # Now copy it into our base image.
 FROM gcr.io/distroless/base
-COPY --from=build /go/bin/app /
+COPY --from=build --chown=appuser:appuser /go/bin/app /
+
+USER appuser
 CMD ["/app"]
